@@ -29,7 +29,8 @@
 <div class="container-fluid mt--6">
     <div class="row">
         <div class="col-5">
-            <form action="{{ route('category.store') }}" method="POST">
+            <form :action="formUrl" method="POST">
+                <input v-if="fetchStatus == true" type="hidden" name="_method" value="PATCH">
                 @csrf
                 <div class="card">
                     <div class="card-header">
@@ -38,7 +39,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Nama Kategori</label>
-                            <input type="text" name="name" id="name" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" value="{{ old('name') }}">
+                            <input v-model="category.name" type="text" name="name" id="name" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" value="{{ old('name') }}">
                             @if ($errors->has('name'))
                             <span class="invalid-feedback">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -47,7 +48,7 @@
                         </div>
                         <div class="form-group">
                             <label for="name">Deskripsi</label>
-                            <textarea name="description" id="description" cols="30" rows="5"
+                            <textarea v-model="category.description" name="description" id="description" cols="30" rows="5"
                                 class="form-control">{{ old('description') }}</textarea>
                             @if ($errors->has('description'))
                             <span class="invalid-feedback">
@@ -57,7 +58,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-right">
-                        <button type="submit" class="btn btn-primary">Tambah</button>
+                        <button type="submit" class="btn btn-primary">@{{ submitText }}</button>
                     </div>
                 </div>
             </form>
@@ -114,6 +115,62 @@ $(document).ready(function(){
             }
         }
     });
+
+    $('.container-fluid').on('click', '.editAction', function(){
+        vm.$data.action.editUrl = $(this).data('action');
+    });
+
+    $('.container-fluid').on('click', '.deleteAction', function(){
+        vm.$data.action.deleteUrl = $(this).data('action');
+    });
+});
+</script>
+
+<script>
+var vm = new Vue({
+    el: '#app',
+    data: {
+        formAction: '',
+        action: {
+            editUrl: '',
+            deleteUrl: '',
+        },
+        fetchStatus: false,
+        category: {},
+    },
+    watch: {
+        'action.editUrl': function(){
+            this.editMethod();
+        },
+        'action.deleteUrl': function(){
+            this.deleteMethod();
+        }
+    },
+    computed:{
+        formUrl()
+        {
+            return this.fetchStatus == true ? `category/${this.category.id}` : "{{ route('category.store') }}";
+        },
+        submitText()
+        {
+            return this.fetchStatus == true ? 'Ubah' : 'Tambah';
+        }
+    },
+    methods: {
+        editMethod() {
+            axios.get(this.action.editUrl)
+            .then((response) => {
+                this.category = response.data;
+                this.fetchStatus = true;
+            })
+        },
+        deleteMethod() {
+            axios.delete(this.action.deleteUrl)
+            .then((response) => {
+                location.reload();
+            })
+        }
+    }
 });
 </script>
 @endpush

@@ -72,7 +72,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::findOrFail($id);
+
+        return response()->json($category, 200);
     }
 
     /**
@@ -84,7 +86,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|min:2|unique:categories,name,' . $id,
+            'description' => 'string|nullable'
+        ]);
+
+        $category = Category::findOrFail($id);
+
+        $category->update($request->all());
+
+        session()->flash('success', 'Data sukses diubah.');
+
+        return redirect()->back();
     }
 
     /**
@@ -95,7 +108,13 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = Category::findOrFail($id);
+
+        if (!$category->delete()) {
+            session()->flash('error', 'Error!.');
+        } else {
+            session()->flash('success', 'Data sukses dihapus.');
+        }
     }
 
     public function dataTable()
