@@ -21,8 +21,10 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-
+    // Category
     Route::resource('/category', 'CategoryController')->except(['create', 'show']);
+    // Job
+    Route::resource('/job', 'JobController');
 
     Route::group(['prefix' => 'api/datatable', 'as' => 'datatable.'], function () {
         Route::get('/categories', 'CategoryController@dataTable')->name('category');
