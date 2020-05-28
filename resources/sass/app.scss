@@ -60,3 +60,37 @@ $fa-font-path: "../webfonts";
 .toast {
     opacity: 1 !important;
 }
+
+.bootstrap-datetimepicker-widget .table-condensed i{
+    color: #5e71e3;
+}
+
+.bootstrap-datetimepicker-widget .today{
+    color: #5e71e3 !important;
+}
+
+.bootstrap-datetimepicker-widget .day.active, .bootstrap-datetimepicker-widget .day.active:hover{
+    color: #000;
+    background-color: rgb(243,243,243) !important;
+    border-radius: 0;
+}
+
+.select2 .select2-selection{
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.15s ease-in-out;
+    height: calc(1.5em + 1.25rem + 5px);
+    border: 1px solid #dee2e6 !important;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple{
+    color: #8898aa;
+    background-color: #fff;
+    border-color: #5e72e4 !important;
+    outline: 0;
+    box-shadow: 0 3px 9px rgba(50, 50, 9, 0), 3px 4px 8px rgba(94, 114, 228, 0.1);
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+    margin-top: 0 !important;
+}
