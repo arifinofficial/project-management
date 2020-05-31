@@ -30,6 +30,8 @@
             @include('layouts.partials.top-nav')
             @yield('content')
         </div>
+
+        @yield('modal')
     </div>
 </body>
 <!-- Scripts -->
