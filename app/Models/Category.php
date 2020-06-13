@@ -11,4 +11,14 @@ class Category extends Model
         'slug',
         'description',
     ];
+
+    /**
+     * Many to many relation to jobs table
+     *
+     * @return void
+     */
+    public function jobs()
+    {
+        return $this->belongsToMany(Job::class);
+    }
 }

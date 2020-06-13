@@ -24,9 +24,14 @@ Route::group(['middleware' => 'auth'], function () {
     // Category
     Route::resource('/category', 'CategoryController')->except(['create', 'show']);
     // Job
-    Route::resource('/job', 'JobController');
+    Route::resource('/job', 'JobController')->except(['show']);
 
     Route::group(['prefix' => 'api/datatable', 'as' => 'datatable.'], function () {
         Route::get('/categories', 'CategoryController@dataTable')->name('category');
+    });
+
+    Route::group(['prefix' => 'api/v1'], function () {
+        Route::post('/job', 'JobController@store');
+        Route::get('/job/{job}', 'JobController@show');
     });
 });

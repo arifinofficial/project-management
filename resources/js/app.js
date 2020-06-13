@@ -8,6 +8,9 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
+
 window.toastr = require('toastr');
 
 var Cookies = require('js-cookie');

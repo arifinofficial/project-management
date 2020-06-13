@@ -27,16 +27,43 @@
 <!-- Page Content -->
 <div class="container-fluid mt--6">
     <div class="row justify-content-center">
-        <div class=" col ">
-            <div class="card">
-                <div class="card-header bg-transparent">
-                    <h3 class="mb-0">List Pekerjaan</h3>
-                </div>
-                <div class="card-body">
-
+        @foreach ($jobs as $job)
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header bg-transparent">
+                        <h3 class="mb-0 text-center">{{ $job->name }}</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="content">
+                            <div class="wrapper-badge mb-4">
+                                <span class="badge badge-primary">10 Divisi</span>
+                                <span class="badge badge-success">10 Pekerjaan</span>
+                            </div>
+                            <p class="small"><i class="ni ni-time-alarm d-block mb-1"></i> {{ $job->start }} - {{ $job->end }}</p>  
+                            <div class="d-flex align-items-center">
+                                <span class="completion mr-2 small">60%</span>
+                                <div class="w-100">
+                                    <div class="progress m-0" style="width: 100%; height: 3px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                                            aria-valuemax="100" style="width: 60%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <span class="small">Dibuat oleh </span> <span class="badge badge-warning">{{ Auth::user($job->user_id)->name }}</span>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <a href="{{ route('job.edit', $job->id) }}" class="btn btn-primary btn-sm">Lihat</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
 </div>
 <!-- End Page Content -->

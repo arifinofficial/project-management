@@ -12,7 +12,7 @@
         <div class="header-body">
             <div class="row align-items-center py-4">
                 <div class="col">
-                    <h6 class="h2 text-white d-inline-block mb-0">Pekerjaan Baru</h6>
+                    <h6 class="h2 text-white d-inline-block mb-0">Pekerjaan</h6>
                     <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
@@ -32,7 +32,8 @@
         <div class=" col ">
             <div class="card">
                 <div class="card-header bg-transparent">
-                    <h3 class="mb-0">Pekerjaan Baru</h3>
+                    <h3 class="mb-0">Pekerjaan </h3>
+                    <input type="hidden" ref="id" value="{{ $id }}">
                 </div>
                 <div class="card-body">
                     <div class="form-row">
@@ -154,7 +155,7 @@
         </div>
         <div class="col-md-12">
             <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" @click.prevent="storeJob()">Simpan</button>
+                <button class="btn btn-primary" @click.prevent="updateJob()">Simpan</button>
             </div>
         </div>
     </div>
@@ -265,6 +266,7 @@ Vue.directive('select2', {
 new Vue({
     el: '#app',
     data: {
+        id: '',
         inputs: {
             job: {
                 name: '',
@@ -303,6 +305,10 @@ new Vue({
 
             $('#start_date').data("DateTimePicker").maxDate(e.date);
         });
+
+        this.id = this.$refs.id.value;
+
+        this.getJob(this.id)
     },
     computed:{
         countDepartements(){
@@ -313,22 +319,23 @@ new Vue({
         }
     },
     methods: {
+        getJob(id){
+            axios.get('/api/v1/job/' + id)
+            .then((response) => {
+                const resData = response.data.data;
+
+                console.log(resData);
+                this.inputs.job = resData.job;
+
+                $('.select2').val(this.inputs.job.category);
+                $('.select2').trigger('change');
+
+                this.inputs.departements = resData.departement
+            });
+        },
         submitDepartement(){
             this.$validator.validate().then(valid => {
                 if (valid) {
-                    // this.inputs.departements.push(
-                    //     {
-                    //         name: '',
-                    //         user_id: '',
-                    //         tasks: [
-                    //             {
-                    //                 name: '',
-                    //                 status: '',
-                    //                 description: '',
-                    //             }
-                    //         ]
-                    //     }
-                    // );
 
                     $('#departementModal').modal('hide');
 
@@ -348,7 +355,6 @@ new Vue({
         },
         showModal(key){
             this.modalActive = key;
-            console.log(key);
 
             $('#departementModal').modal({
                 backdrop: 'static',
@@ -393,7 +399,7 @@ new Vue({
                 show: true
             });
         },
-        storeJob()
+        updateJob()
         {
             this.$validator.validate().then(valid => {
                 if (valid) {
