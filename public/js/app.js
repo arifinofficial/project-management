@@ -62346,7 +62346,9 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
-Vue.use(vee_validate__WEBPACK_IMPORTED_MODULE_0__["default"]);
+Vue.use(vee_validate__WEBPACK_IMPORTED_MODULE_0__["default"]); // Set User ID 
+
+Vue.prototype.$userID = document.querySelector("meta[name='user-id']").getAttribute('content');
 window.toastr = __webpack_require__(/*! toastr */ "./node_modules/toastr/toastr.js");
 
 var Cookies = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/src/js.cookie.js");

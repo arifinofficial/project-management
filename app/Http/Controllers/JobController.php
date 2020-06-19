@@ -66,6 +66,8 @@ class JobController extends Controller
                     'job_id' => $jobModel->id,
                     'user_id' => $departement['user_id'],
                 ]);
+
+                $departementModel->users()->attach($departement['users']);
     
                 foreach ($departement['tasks'] as $task) {
                     Task::create([
@@ -104,6 +106,10 @@ class JobController extends Controller
         $job->departements = $job->departements->map(function ($q) {
             $q['pic'] = auth()->user($q->user_id)->name;
 
+            // $q->load('users');
+
+            $q['users'] = $q->users()->pluck('user_id');
+
             return $q;
         });
 
@@ -135,9 +141,68 @@ class JobController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(JobRequest $request, $id)
     {
-        //
+        $job = Job::findOrFail($id);
+
+        DB::beginTransaction();
+
+        try {
+            $job->update([
+                'name' => $request->job['name'],
+                'description' => $request->job['description'],
+                'start' => $request->job['start'],
+                'end' => $request->job['end']
+            ]);
+
+            $job->categories()->sync($request->job['category']);
+
+            // Iteration update departement
+            foreach ($request->departements as $departement) {
+                $insertDepartement = Departement::updateOrCreate(
+                    ['id' => $departement['id']],
+                    [
+                        'user_id' => $departement['user_id'],
+                        'job_id' => $id,
+                        'name' => $departement['name'],
+                    ]
+                );
+
+                // if (count($departement['users']) == count($departement['users'], COUNT_RECURSIVE)) {
+                //     $userId = $departement['users'];
+                // } else {
+                //     $userId = collect($departement['users'])->map(function ($q) {
+                //         return $q['id'];
+                //     });
+                // }
+
+                $userId = $departement['users'];
+                    
+                $insertDepartement->users()->sync($userId);
+
+                // Iteration update task
+                foreach ($departement['tasks'] as $task) {
+                    Task::updateOrCreate(
+                        ['id' => $task['id']],
+                        [
+                            'departement_id' => $insertDepartement->id,
+                            'name' => $task['name'],
+                            'description' => $task['description'],
+                            'status' => $task['status']
+                        ]
+                    );
+                }
+            }
+
+            DB::commit();
+
+            session()->flash('success', 'Data sukses diubah.');
+
+            return response()->json(['status' => 'success'], 200);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
     }
 
     /**
@@ -146,8 +211,42 @@ class JobController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Job $job)
     {
-        //
+        $job->delete();
+
+        $route = route('job.index');
+
+        session()->flash('success', 'Data sukses dihapus.');
+
+        return response()->json(['status' => 'success', 'url' => $route], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  object  $job, departement
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyDepartement(Job $job, Departement $departement)
+    {
+        $departement->delete();
+
+        session()->flash('success', 'Data sukses dihapus.');
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  object  $job, $departement, $task
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyTask(Job $job, Departement $departement, Task $task)
+    {
+        $task->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Data sukses dihapus.'], 200);
     }
 }

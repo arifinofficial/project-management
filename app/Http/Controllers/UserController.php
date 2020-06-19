@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
+use App\Models\User;
 use Yajra\DataTables\Datatables;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
-class CategoryController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('category.index');
+        return view('user_management.index');
     }
 
     /**
@@ -38,17 +38,16 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|string|min:2|unique:categories',
-            'description' => 'string|nullable'
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8'
         ]);
 
-        Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name, '-'),
-            'description' => $request->description,
-        ]);
+        $request['password'] = Hash::make($request->password);
 
-        return response()->json(['message' => 'Data berhasil ditambah.'], 200);
+        User::create($request->all());
+
+        return response()->json(['message' => 'Data berhasil tambah.']);
     }
 
     /**
@@ -70,9 +69,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        return response()->json($category, 200);
+        return response()->json($user);
     }
 
     /**
@@ -85,15 +84,21 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required|string|min:2|unique:categories,name,' . $id,
-            'description' => 'string|nullable'
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'password' => 'nullable|string|min:8'
         ]);
 
-        $category = Category::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        $category->update($request->all());
+        if ($request->has('password')) {
+            $request['password'] = Hash::make($request->password);
+            $user->update($request->all());
+        } else {
+            $user->update($request->except(['password']));
+        }
 
-        return response()->json(['message' => 'Data berhasil diubah.'], 200);
+        return response()->json(['message' => 'Data berhasil diubah.']);
     }
 
     /**
@@ -104,9 +109,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        if (!$category->delete()) {
+        if (!$user->delete()) {
             session()->flash('error', 'Error!.');
         } else {
             return response()->json(['message' => 'Data berhasil dihapus.'], 200);
@@ -115,14 +120,14 @@ class CategoryController extends Controller
 
     public function dataTable()
     {
-        $categories = Category::query();
+        $users = User::query();
 
-        return DataTables::of($categories)
-        ->addColumn('action', function ($categories) {
+        return DataTables::of($users)
+        ->addColumn('action', function ($users) {
             return view('layouts.partials._action', [
-                'model' => $categories,
-                'edit_url' => route('category.edit', $categories->id),
-                'delete_url' => route('category.destroy', $categories->id)
+                'model' => $users,
+                'edit_url' => route('user-management.edit', $users->id),
+                'delete_url' => route('user-management.destroy', $users->id)
             ]);
         })
         ->rawColumns(['action'])

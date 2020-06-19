@@ -9,7 +9,11 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import VeeValidate from 'vee-validate';
+
 Vue.use(VeeValidate);
+
+// Set User ID 
+Vue.prototype.$userID = document.querySelector("meta[name='user-id']").getAttribute('content');
 
 window.toastr = require('toastr');
 

@@ -11,12 +11,11 @@
         <div class="header-body">
             <div class="row align-items-center py-4">
                 <div class="col">
-                    <h6 class="h2 text-white d-inline-block mb-0">Kategori</h6>
+                    <h6 class="h2 text-white d-inline-block mb-0">User</h6>
                     <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="#">Data Pekerjaan</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Kategori</li>
+                            <li class="breadcrumb-item active" aria-current="page">Manajemen User</li>
                         </ol>
                     </nav>
                 </div>
@@ -30,21 +29,27 @@
     <div class="row">
         <div class="col-5">
             <form>
-                <input type="hidden" value="{{ route('category.store') }}" ref="store_update">
+                <input type="hidden" value="{{ route('user-management.store') }}" ref="store_update">
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="mb-0">Form Kategori</h3>
+                        <h3 class="mb-0">Form User</h3>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="name">Nama Kategori</label>
-                            <input v-model="model.name" type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
+                            <label for="name">Nama</label>
+                            <input v-model="model.name" data-vv-as="name" v-validate="'required'" type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
+                            <span class="invalid-feedback d-block">@{{ errors.first('name') }}</span>
                         </div>
                         <div class="form-group">
-                            <label for="name">Deskripsi</label>
-                            <textarea v-model="model.description" name="description" id="description" cols="30" rows="5"
-                                class="form-control">{{ old('description') }}</textarea>
+                            <label for="email">Email</label>
+                            <input v-model="model.email" data-vv-as="email" v-validate="'required'" type="email" name="email" id="email" class="form-control" value="{{ old('name') }}">
+                            <span class="invalid-feedback d-block">@{{ errors.first('email') }}</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input v-model="model.password" data-vv-as="password" v-validate="'min:8'" type="password" name="password" id="password" id="password" class="form-control">
+                            <span class="invalid-feedback d-block">@{{ errors.first('password') }}</span>
                         </div>
                     </div>
                     <div class="card-footer text-right">
@@ -65,7 +70,7 @@
                                 <tr>
                                     <th>#ID</th>
                                     <th>Nama</th>
-                                    <th>Deskripsi</th>
+                                    <th>Email</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -92,11 +97,11 @@ $(document).ready(function(){
         responsive: true,
         processing: true,
         serverSide: true,
-        ajax:"{{ route('datatable.category') }}",
+        ajax:"{{ route('datatable.user') }}",
         columns: [
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
-            {data: 'description', name: 'description'},
+            {data: 'email', name: 'email'},
             {data: 'action', name: 'action', orderable: false, searchable: false}
         ],
         language: {

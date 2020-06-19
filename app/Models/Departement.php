@@ -10,11 +10,14 @@ class Departement extends Model
     use SoftDeletes;
     
     protected $fillable = [
+        'id',
         'user_id',
         'job_id',
         'name',
         'progress',
     ];
+
+    protected $hidden = array('pivot');
 
     /**
      * Has many relation to tasks table
@@ -24,5 +27,15 @@ class Departement extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Many to many to users table
+     *
+     * @return void
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 }

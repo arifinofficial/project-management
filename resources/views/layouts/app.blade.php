@@ -8,6 +8,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- User ID -->
+    <meta name="user-id" content={{ optional(Auth::user())->id }}>
+
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
@@ -24,10 +27,14 @@
 
 <body>
     <div id="app">
-        @include('layouts.partials.sidebar')
+        @auth
+            @include('layouts.partials.sidebar')
+        @endauth
 
         <div class="main-content" id="panel">
-            @include('layouts.partials.top-nav')
+            @auth
+                @include('layouts.partials.top-nav')
+            @endauth
             @yield('content')
         </div>
 

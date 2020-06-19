@@ -192,6 +192,14 @@
                         <span class="invalid-feedback d-block">@{{ errors.first('user_id') }}</span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="">Member</label>
+                    <select v-select2 name="users" v-model="inputs.departements[modalActive].users" data-width="100%" id="" class="form-control select-users" multiple>
+                        @foreach ($users as $id => $user)
+                            <option value="{{ $id }}">{{ $user }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="container rounded py-3 mt-4" style="background-color: #e8eaf3"
                     v-for="(task, key) in inputs.departements[modalActive].tasks" :key="key">
                     <div class="form-row">
@@ -245,6 +253,8 @@
         });
 
         $('.select2').select2();
+
+        $('.select-users').select2();
     });
 </script>
 <script>
@@ -277,6 +287,7 @@ new Vue({
                 {
                     name: '',
                     user_id: '',
+                    users: [],
                     tasks: [
                         {
                             name: '',
@@ -374,6 +385,7 @@ new Vue({
                     {
                         name: '',
                         user_id: '',
+                        users: [],
                         tasks: [
                             {
                                 name: '',

@@ -155,6 +155,7 @@
         </div>
         <div class="col-md-12">
             <div class="d-flex justify-content-end">
+                <button class="btn btn-danger" @click.prevent="deleteJob()">Hapus</button>
                 <button class="btn btn-primary" @click.prevent="updateJob()">Simpan</button>
             </div>
         </div>
@@ -192,6 +193,14 @@
                         </select>
                         <span class="invalid-feedback d-block">@{{ errors.first('user_id') }}</span>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="">Member</label>
+                    <select v-select2 name="users" v-model="inputs.departements[modalActive].users" data-width="100%" id="" class="form-control select-users" multiple>
+                        @foreach ($users as $id => $user)
+                            <option value="{{ $id }}">{{ $user }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="container rounded py-3 mt-4" style="background-color: #e8eaf3"
                     v-for="(task, key) in inputs.departements[modalActive].tasks" :key="key">
@@ -246,6 +255,8 @@
         });
 
         $('.select2').select2();
+
+        $('.select-users').select2();
     });
 </script>
 <script>
@@ -279,6 +290,7 @@ new Vue({
                 {
                     name: '',
                     user_id: '',
+                    users: [],
                     tasks: [
                         {
                             name: '',
@@ -324,7 +336,6 @@ new Vue({
             .then((response) => {
                 const resData = response.data.data;
 
-                console.log(resData);
                 this.inputs.job = resData.job;
 
                 $('.select2').val(this.inputs.job.category);
@@ -345,13 +356,24 @@ new Vue({
         },
         addTask(){
             this.inputs.departements[this.modalActive].tasks.push({
+                id: null,
                 name: '',
                 status: '',
                 description: '',
             });
         },
         removeTask(key){
-            this.inputs.departements[this.modalActive].tasks.splice(key, 1);
+            if (this.inputs.departements[this.modalActive].tasks[key].id === null) {
+                this.inputs.departements[this.modalActive].tasks.splice(key, 1);
+            } else {
+                let departementId = this.inputs.departements[this.modalActive].tasks[key].departement_id;
+                let taskId = this.inputs.departements[this.modalActive].tasks[key].id;
+                axios.delete(`/api/v1/job/${this.id}/${departementId}/${taskId}`)
+                .then((response) => {
+                    this.inputs.departements[this.modalActive].tasks.splice(key, 1);
+                    toastr.success(response.data.message);
+                });
+            }
         },
         showModal(key){
             this.modalActive = key;
@@ -361,6 +383,11 @@ new Vue({
                 keyboard: true, 
                 show: true
             });
+
+            // $('.select-users').val(this.inputs.departements[key].users.map((user) => user.id));
+            // $('.select-users').val(Object.keys(this.inputs.departements[key].users));
+            $('.select-users').val(this.inputs.departements[key].users);
+            $('.select-users').trigger('change');
         },
         hideModal()
         {
@@ -370,7 +397,15 @@ new Vue({
         },
         removeDepartement(key)
         {
-            this.inputs.departements.splice(key, 1);
+            if (this.inputs.departements[key].id === null) {
+                this.inputs.departements.splice(key, 1);    
+            } else {
+                let departementId = this.inputs.departements[key].id;
+                axios.delete(`/api/v1/job/${this.id}/${departementId}`)
+                .then((response) => {
+                    window.location.reload();
+                });
+            }
 
             this.modalActive = this.countDepartements;
         },
@@ -378,10 +413,13 @@ new Vue({
             if (this.inputs.departements[this.countDepartements].name != "") {
                 this.inputs.departements.push(
                     {
+                        id: null,
                         name: '',
                         user_id: '',
+                        users: [],
                         tasks: [
                             {
+                                id: null,
                                 name: '',
                                 status: '',
                                 description: '',
@@ -403,13 +441,22 @@ new Vue({
         {
             this.$validator.validate().then(valid => {
                 if (valid) {
-                    axios.post('/api/v1/job', this.inputs)
+                    axios.patch(`/api/v1/job/${this.id}`, this.inputs)
                     .then((response) => {
                         if (response.status == 200) {
-                            window.location = response.data.url
-                        }              
+                            window.location.reload();
+                        }
                     });
                 }
+            });
+        },
+        deleteJob()
+        {   
+            axios.delete(`/api/v1/job/${this.id}`)
+            .then((response) => {
+                if (response.status == 200) {
+                    window.location = response.data.url
+                } 
             });
         }
     },
