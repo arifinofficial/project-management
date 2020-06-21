@@ -14,6 +14,12 @@ use DB;
 
 class JobController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:create job', ['only' => ['create']]);
+        $this->middleware('permission:delete job', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -104,7 +110,7 @@ class JobController extends Controller
         $job = $job->load('departements.tasks');
 
         $job->departements = $job->departements->map(function ($q) {
-            $q['pic'] = auth()->user($q->user_id)->name;
+            $q['pic'] = User::findOrFail($q->user_id)->name;
 
             // $q->load('users');
 
@@ -230,6 +236,8 @@ class JobController extends Controller
      */
     public function destroyDepartement(Job $job, Departement $departement)
     {
+        $this->authorize('showModal', $departement);
+
         $departement->delete();
 
         session()->flash('success', 'Data sukses dihapus.');
@@ -248,5 +256,32 @@ class JobController extends Controller
         $task->delete();
 
         return response()->json(['status' => 'success', 'message' => 'Data sukses dihapus.'], 200);
+    }
+
+    /**
+     * Policy for create new departement
+     *
+     * @param  object  $job, $departement
+     * @return boolean
+     */
+    public function checkDepartementCreatePolicy(Job $job)
+    {
+        // dd($departement);
+        $this->authorize('createDepartement', $job);
+
+        return true;
+    }
+
+    /**
+     * Policy for departement
+     *
+     * @param  object  $job, $departement
+     * @return boolean
+     */
+    public function checkDepartementPolicy(Job $job, Departement $departement)
+    {
+        $this->authorize('showModal', $departement);
+
+        return true;
     }
 }
