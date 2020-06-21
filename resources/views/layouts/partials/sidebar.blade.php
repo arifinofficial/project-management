@@ -46,12 +46,22 @@
                             <span class="nav-link-text">Manajemen User</span>
                         </a>
                     </li>
+                    @role('super admin')
                     <li class="nav-item">
-                        <a class="nav-link" href="tables.html">
-                            <i class="ni ni-bullet-list-67 text-default"></i>
-                            <span class="nav-link-text">Tables</span>
+                        <a class="nav-link" data-toggle="collapse" href="#collapseSetting" role="button"
+                        aria-expanded="false" aria-controls="collapseSetting">
+                            <i class="ni ni-settings-gear-65 text-default"></i>
+                            <span class="nav-link-text">Konfigurasi</span>
                         </a>
+                        <ul class="collapse" id="collapseSetting">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('role.index') }}">
+                                    Role
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+                    @endrole
                     <li class="nav-item">
                         <a class="nav-link" href="login.html">
                             <i class="ni ni-key-25 text-info"></i>
