@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Yajra\DataTables\Datatables;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,7 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user_management.index');
+        $roles = Role::all()->pluck('name');
+
+        return view('user_management.index', compact('roles'));
     }
 
     /**
@@ -40,12 +43,15 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8'
+            'role' => 'required|string',
+            'password' => 'required|string|min:8',
         ]);
 
         $request['password'] = Hash::make($request->password);
 
-        User::create($request->all());
+        $user = User::create($request->all());
+
+        $user->assignRole($request->role);
 
         return response()->json(['message' => 'Data berhasil tambah.']);
     }
@@ -70,6 +76,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
+        $user['role'] = $user->roles()->first()->name;
 
         return response()->json($user);
     }
@@ -86,6 +93,7 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'role' => 'required|string',
             'password' => 'nullable|string|min:8'
         ]);
 
@@ -97,6 +105,8 @@ class UserController extends Controller
         } else {
             $user->update($request->except(['password']));
         }
+
+        $user->syncRoles($request->role);
 
         return response()->json(['message' => 'Data berhasil diubah.']);
     }
@@ -123,6 +133,9 @@ class UserController extends Controller
         $users = User::query();
 
         return DataTables::of($users)
+        ->addColumn('role', function ($users) {
+            return $users->roles()->first()->name;
+        })
         ->addColumn('action', function ($users) {
             return view('layouts.partials._action', [
                 'model' => $users,
