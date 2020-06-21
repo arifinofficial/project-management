@@ -122,7 +122,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <strong>Arifin N.</strong>
+                                    <strong>@{{ departement.pic }}</strong>
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -155,7 +155,9 @@
         </div>
         <div class="col-md-12">
             <div class="d-flex justify-content-end">
-                <button class="btn btn-danger" @click.prevent="deleteJob()">Hapus</button>
+                @can('delete job')
+                    <button class="btn btn-danger" @click.prevent="deleteJob()">Hapus</button>
+                @endcan
                 <button class="btn btn-primary" @click.prevent="updateJob()">Simpan</button>
             </div>
         </div>
@@ -376,18 +378,23 @@ new Vue({
             }
         },
         showModal(key){
-            this.modalActive = key;
+            let departementId = this.inputs.departements[key].id;
+            axios.post(`/api/v1/job/check/${this.id}/${departementId}`)
+            .then((response) => {
+                this.modalActive = key;
 
-            $('#departementModal').modal({
-                backdrop: 'static',
-                keyboard: true, 
-                show: true
-            });
+                $('#departementModal').modal({
+                    backdrop: 'static',
+                    keyboard: true, 
+                    show: true
+                });
 
-            // $('.select-users').val(this.inputs.departements[key].users.map((user) => user.id));
-            // $('.select-users').val(Object.keys(this.inputs.departements[key].users));
-            $('.select-users').val(this.inputs.departements[key].users);
-            $('.select-users').trigger('change');
+                $('.select-users').val(this.inputs.departements[key].users);
+                $('.select-users').trigger('change');
+            })
+            .catch((error) => {
+                toastr.error("Anda tidak memiliki akses!");
+            })
         },
         hideModal()
         {
@@ -397,45 +404,58 @@ new Vue({
         },
         removeDepartement(key)
         {
-            if (this.inputs.departements[key].id === null) {
+            let departementId = this.inputs.departements[key].id;
+            axios.post(`/api/v1/job/check/${this.id}/${departementId}`)
+            .then((response) => {
+                if (this.inputs.departements[key].id === null) {
                 this.inputs.departements.splice(key, 1);    
-            } else {
-                let departementId = this.inputs.departements[key].id;
-                axios.delete(`/api/v1/job/${this.id}/${departementId}`)
-                .then((response) => {
-                    window.location.reload();
-                });
-            }
+                } else {
+                    let departementId = this.inputs.departements[key].id;
+                    axios.delete(`/api/v1/job/${this.id}/${departementId}`)
+                    .then((response) => {
+                        window.location.reload();
+                    });
+                }
 
-            this.modalActive = this.countDepartements;
+                this.modalActive = this.countDepartements;
+            })
+            .catch((error) => {
+                toastr.error("Anda tidak memiliki akses!");
+            })
         },
         modalDepartement(){
-            if (this.inputs.departements[this.countDepartements].name != "") {
-                this.inputs.departements.push(
-                    {
-                        id: null,
-                        name: '',
-                        user_id: '',
-                        users: [],
-                        tasks: [
-                            {
-                                id: null,
-                                name: '',
-                                status: '',
-                                description: '',
-                            }
-                        ]
-                    }
-                );
-                
-                this.modalActive = this.countDepartements;
-            }
+            axios.post(`/api/v1/job/check/${this.id}`)
+            .then((response) => {
+                if (this.inputs.departements.length == 0 || this.inputs.departements[this.countDepartements].name != "") {
+                    this.inputs.departements.push(
+                        {
+                            id: null,
+                            name: '',
+                            user_id: '',
+                            users: [],
+                            tasks: [
+                                {
+                                    id: null,
+                                    name: '',
+                                    status: '',
+                                    description: '',
+                                }
+                            ]
+                        }
+                    );
+                    
+                    this.modalActive = this.countDepartements;
+                }
 
-            $('#departementModal').modal({
-                backdrop: 'static',
-                keyboard: true, 
-                show: true
-            });
+                $('#departementModal').modal({
+                    backdrop: 'static',
+                    keyboard: true, 
+                    show: true
+                });
+            })
+            .catch((error) => {
+                toastr.error("Anda tidak memiliki akses!");
+            })
         },
         updateJob()
         {
