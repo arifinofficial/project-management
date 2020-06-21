@@ -28,6 +28,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/job', 'JobController')->except(['show']);
     // User Management
     Route::resource('/user-management', 'UserController')->except(['create', 'show']);
+    // Role || Only for super admin
+    Route::group(['middleware' => ['role:super admin']], function () {
+        Route::get('/role', 'RoleController@index')->name('role.index');
+        Route::put('/role/{role}', 'RoleController@update')->name('role.update');
+    });
 
     Route::group(['prefix' => 'api/datatable', 'as' => 'datatable.'], function () {
         Route::get('/categories', 'CategoryController@dataTable')->name('category');
@@ -47,5 +52,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/job/{job}/{departement}', 'JobController@destroyDepartement');
         // Job Departement Task Delete
         Route::delete('/job/{job}/{departement}/{task}', 'JobController@destroyTask');
+        // Job Departement Create Policy
+        // Route::post('/job/check/create', 'JobController@checkDepartementCreatePolicy');
+        Route::post('/job/check/{job}', 'JobController@checkDepartementCreatePolicy');
+        // Job Departement Policy
+        Route::post('/job/check/{job}/{departement}', 'JobController@checkDepartementPolicy');
     });
 });
