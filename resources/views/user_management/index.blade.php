@@ -47,6 +47,15 @@
                             <span class="invalid-feedback d-block">@{{ errors.first('email') }}</span>
                         </div>
                         <div class="form-group">
+                            <label for="">Role</label>
+                            <select v-model="model.role" data-vv-as="role" v-validate="'required'" name="role" id="" class="form-control">
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role }}">{{ ucwords($role) }}</option>
+                                @endforeach
+                            </select>
+                            <span class="invalid-feedback d-block">@{{ errors.first('role') }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="password">Password</label>
                             <input v-model="model.password" data-vv-as="password" v-validate="'min:8'" type="password" name="password" id="password" id="password" class="form-control">
                             <span class="invalid-feedback d-block">@{{ errors.first('password') }}</span>
@@ -71,6 +80,7 @@
                                     <th>#ID</th>
                                     <th>Nama</th>
                                     <th>Email</th>
+                                    <th>Role</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -102,6 +112,7 @@ $(document).ready(function(){
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
+            {data: 'role', name: 'role'},
             {data: 'action', name: 'action', orderable: false, searchable: false}
         ],
         language: {
