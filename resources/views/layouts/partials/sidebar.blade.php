@@ -62,37 +62,6 @@
                         </ul>
                     </li>
                     @endrole
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">
-                            <i class="ni ni-key-25 text-info"></i>
-                            <span class="nav-link-text">Login</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">
-                            <i class="ni ni-circle-08 text-pink"></i>
-                            <span class="nav-link-text">Register</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#collapseExample" role="button"
-                            aria-expanded="false" aria-controls="collapseExample">
-                            <i class="ni ni-send text-dark"></i>
-                            <span class="nav-link-text">Upgrade</span>
-                        </a>
-                        <ul class="collapse" id="collapseExample">
-                            <li class="nav-item">
-                                <a class="nav-link" href="">
-                                    Multilevel 1
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="">
-                                    Multilevel 2
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
         </div>
