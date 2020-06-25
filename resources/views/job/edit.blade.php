@@ -126,11 +126,11 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <span class="completion mr-2">60%</span>
+                                        <span class="completion mr-2" style="min-width:35px">@{{ departement.progress }}%</span>
                                         <div>
                                             <div class="progress">
-                                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60"
-                                                    aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                                <div :style="{ width: departement.progress + '%'}" class="progress-bar" :class="classProgress(departement.progress)" role="progressbar" aria-valuenow=""
+                                                    aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -279,6 +279,7 @@ Vue.directive('select2', {
 new Vue({
     el: '#app',
     data: {
+        color: 'red',
         id: '',
         inputs: {
             job: {
@@ -478,7 +479,16 @@ new Vue({
                     window.location = response.data.url
                 } 
             });
-        }
+        },
+        classProgress(value){
+            if (value < 50) {
+                return 'bg-warning';
+            } else if(value < 80) {
+                return 'bg-primary';
+            } else {
+                return 'bg-success';
+            }
+        },
     },
 });
 </script>
