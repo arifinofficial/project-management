@@ -101,7 +101,6 @@
                                 <th scope="col" class="sort" data-sort="name">Project</th>
                                 <th scope="col" class="sort" data-sort="status">Status</th>
                                 <th scope="col" class="sort" data-sort="pic">PIC</th>
-                                <th scope="col" class="sort" data-sort="completion">Completion</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -122,17 +121,6 @@
                                 </td>
                                 <td>
                                     <strong>Arifin N.</strong>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="completion mr-2">60%</span>
-                                        <div>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60"
-                                                    aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </td>
                                 <td class="text-right">
                                     <div class="dropdown">
