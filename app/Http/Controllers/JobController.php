@@ -27,7 +27,8 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Job::orderBy('created_at', 'DESC')->paginate(9);
+        $jobs = Job::with('departements.tasks')->orderBy('created_at', 'DESC')->paginate(9);
+        // dd(count($jobs[0]->departements, COUNT_RECURSIVE) - $jobs[0]->departements);
 
         return view('job.index', compact('jobs'));
     }
@@ -66,6 +67,8 @@ class JobController extends Controller
 
             $jobModel->categories()->attach($request->job['category']);
 
+            $jobProgress = 0;
+
             foreach ($request->departements as $departement) {
                 $departementModel = Departement::create([
                     'name' => $departement['name'],
@@ -75,6 +78,8 @@ class JobController extends Controller
 
                 $departementModel->users()->attach($departement['users']);
     
+                $finishTask = 0;
+
                 foreach ($departement['tasks'] as $task) {
                     Task::create([
                         'departement_id' => $departementModel->id,
@@ -82,8 +87,28 @@ class JobController extends Controller
                         'description' => $task['description'],
                         'status' => $task['status']
                     ]);
+
+                    if ($task['status'] == 'Selesai') {
+                        $finishTask += 1;
+                    }
+                }
+
+                $progressDepartement = ceil(($finishTask / count($departementModel->tasks)) * 100);
+
+                $departementModel->update([
+                    'progress' => $progressDepartement
+                ]);
+
+                if ($departementModel->progress > 0) {
+                    $jobProgress += $departementModel->progress;
                 }
             }
+
+            $jobProgressResult = ceil($jobProgress / count($jobModel->departements));
+
+            $jobModel->update([
+                'progress' => $jobProgressResult
+            ]);
 
             DB::commit();
 
@@ -111,8 +136,6 @@ class JobController extends Controller
 
         $job->departements = $job->departements->map(function ($q) {
             $q['pic'] = User::findOrFail($q->user_id)->name;
-
-            // $q->load('users');
 
             $q['users'] = $q->users()->pluck('user_id');
 
@@ -163,6 +186,7 @@ class JobController extends Controller
 
             $job->categories()->sync($request->job['category']);
 
+            $jobProgress = 0;
             // Iteration update departement
             foreach ($request->departements as $departement) {
                 $insertDepartement = Departement::updateOrCreate(
@@ -174,21 +198,14 @@ class JobController extends Controller
                     ]
                 );
 
-                // if (count($departement['users']) == count($departement['users'], COUNT_RECURSIVE)) {
-                //     $userId = $departement['users'];
-                // } else {
-                //     $userId = collect($departement['users'])->map(function ($q) {
-                //         return $q['id'];
-                //     });
-                // }
-
                 $userId = $departement['users'];
                     
                 $insertDepartement->users()->sync($userId);
 
                 // Iteration update task
+                $finishTask = 0;
                 foreach ($departement['tasks'] as $task) {
-                    Task::updateOrCreate(
+                    $insertTask = Task::updateOrCreate(
                         ['id' => $task['id']],
                         [
                             'departement_id' => $insertDepartement->id,
@@ -197,8 +214,28 @@ class JobController extends Controller
                             'status' => $task['status']
                         ]
                     );
+
+                    if ($task['status'] == 'Selesai') {
+                        $finishTask += 1;
+                    }
+                }
+
+                $progressDepartement = ceil(($finishTask / count($insertDepartement->tasks)) * 100);
+
+                $insertDepartement->update([
+                    'progress' => $progressDepartement
+                ]);
+
+                if ($insertDepartement->progress > 0) {
+                    $jobProgress += $insertDepartement->progress;
                 }
             }
+
+            $jobProgressResult = ceil($jobProgress / count($job->departements));
+
+            $job->update([
+                'progress' => $jobProgressResult
+            ]);
 
             DB::commit();
 
