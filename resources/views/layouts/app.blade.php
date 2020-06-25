@@ -28,14 +28,17 @@
 <body>
     <div id="app">
         @auth
-            @include('layouts.partials.sidebar')
+        @include('layouts.partials.sidebar')
         @endauth
 
         <div class="main-content" id="panel">
             @auth
-                @include('layouts.partials.top-nav')
+            @include('layouts.partials.top-nav')
             @endauth
             @yield('content')
+            @auth
+            @include('layouts.partials.footer')
+            @endauth
         </div>
 
         @yield('modal')
@@ -45,4 +48,5 @@
 <script src="{{ asset('js/app.js') }}"></script>
 @include('layouts.partials._notify')
 @stack('bottom')
+
 </html>
