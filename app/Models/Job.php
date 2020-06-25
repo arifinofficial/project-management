@@ -15,6 +15,7 @@ class Job extends Model
         'description',
         'start',
         'end',
+        'progress',
     ];
 
     /**
@@ -35,5 +36,15 @@ class Job extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function taskCount()
+    {
+        $total = 0;
+        foreach ($this->departements as $departement) {
+            $total += count($departement->tasks);
+        }
+        
+        return $total;
     }
 }
