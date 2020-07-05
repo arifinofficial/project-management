@@ -57,5 +57,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/job/check/{job}', 'JobController@checkDepartementCreatePolicy');
         // Job Departement Policy
         Route::post('/job/check/{job}/{departement}', 'JobController@checkDepartementPolicy');
+        // Notifications
+        Route::post('/mark-as-read/{id}', function ($id) {
+            $notification = auth()->user()->notifications()->whereId($id)->firstOrFail();
+
+            $notification->markAsRead();
+        });
     });
 });

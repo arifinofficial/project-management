@@ -400,7 +400,7 @@ new Vue({
                     axios.post('/api/v1/job', this.inputs)
                     .then((response) => {
                         if (response.status == 200) {
-                            window.location = response.data.url
+                            // window.location = response.data.url
                         }              
                     });
                 }
@@ -409,4 +409,5 @@ new Vue({
     },
 });
 </script>
+{{-- <script src="{{ asset('js/create-job.js') }}"></script> --}}
 @endpush

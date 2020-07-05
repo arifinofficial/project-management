@@ -465,7 +465,7 @@ new Vue({
                     axios.patch(`/api/v1/job/${this.id}`, this.inputs)
                     .then((response) => {
                         if (response.status == 200) {
-                            window.location.reload();
+                            // window.location.reload();
                         }
                     });
                 }

@@ -47,4 +47,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Departement::class);
     }
+
+    public function receivesBroadcastNotificationsOn()
+    {
+        return 'App.User.'.$this->id;
+    }
 }

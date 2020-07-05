@@ -45,7 +45,7 @@
     </div>
 </body>
 <!-- Scripts -->
-<script src="{{ asset('js/app.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 @include('layouts.partials._notify')
 @stack('bottom')
 

@@ -1,5 +1,5 @@
 <!-- Topnav -->
-<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+<nav id="nav" class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Search form -->
@@ -36,23 +36,24 @@
                         <i class="ni ni-zoom-split-in"></i>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
+                <notification :userid="{{ auth()->user()->id }}" :unreads="{{ auth()->user()->unreadNotifications }}"></notification>
+                {{-- <li class="nav-item dropdown">
                     <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
-                        <i class="ni ni-bell-55"></i>
+                        <i class="ni ni-bell-55"></i> 
+                        <span class="badge badge-pill badge-warning">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">
-                        <!-- Dropdown header -->
                         <div class="px-3 py-3">
                             <h6 class="text-sm text-muted m-0">You have <strong
                                     class="text-primary">13</strong> notifications.</h6>
                         </div>
-                        <!-- List group -->
                         <div class="list-group list-group-flush">
                             <a href="#!" class="list-group-item list-group-item-action">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <!-- Avatar -->
                                         <img alt="Image placeholder" src="{{ asset('images/team-1.jpg') }}"
                                             class="avatar rounded-circle">
                                     </div>
@@ -72,7 +73,6 @@
                             <a href="#!" class="list-group-item list-group-item-action">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <!-- Avatar -->
                                         <img alt="Image placeholder" src="{{ asset('images/team-2.jpg') }}"
                                             class="avatar rounded-circle">
                                     </div>
@@ -112,7 +112,6 @@
                             <a href="#!" class="list-group-item list-group-item-action">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <!-- Avatar -->
                                         <img alt="Image placeholder" src="{{ asset('images/team-4.jpg') }}"
                                             class="avatar rounded-circle">
                                     </div>
@@ -132,7 +131,6 @@
                             <a href="#!" class="list-group-item list-group-item-action">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <!-- Avatar -->
                                         <img alt="Image placeholder" src="{{ asset('images/team-5.jpg') }}"
                                             class="avatar rounded-circle">
                                     </div>
@@ -150,12 +148,11 @@
                                 </div>
                             </a>
                         </div>
-                        <!-- View all -->
                         <a href="#!"
                             class="dropdown-item text-center text-primary font-weight-bold py-3">View
                             all</a>
                     </div>
-                </li>
+                </li> --}}
                 <li class="nav-item dropdown">
                     <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">

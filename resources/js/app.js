@@ -15,6 +15,13 @@ Vue.use(VeeValidate);
 // Set User ID 
 Vue.prototype.$userID = document.querySelector("meta[name='user-id']").getAttribute('content');
 
+// Vue Component
+Vue.component('notification', require('./components/Notification.vue').default);
+
+const app = new Vue({
+	el: '#nav',
+});
+
 window.toastr = require('toastr');
 
 var Cookies = require('js-cookie');
