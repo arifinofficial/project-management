@@ -400,7 +400,7 @@ new Vue({
                     axios.post('/api/v1/job', this.inputs)
                     .then((response) => {
                         if (response.status == 200) {
-                            // window.location = response.data.url
+                            window.location = response.data.url
                         }              
                     });
                 }

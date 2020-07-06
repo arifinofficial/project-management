@@ -218,7 +218,7 @@
                         <div class="dropdown-header noti-title">
                             <h6 class="text-overflow m-0">Halo! {{ auth()->user()->name }}</h6>
                         </div>
-                        <a href="#!" class="dropdown-item">
+                        <a href="{{ route('profile.index', auth()->user()->id) }}" class="dropdown-item">
                             <i class="ni ni-single-02"></i>
                             <span>Profil saya</span>
                         </a>

@@ -69,6 +69,9 @@
             </div>
         @endforeach
     </div>
+    <div class="row justify-content-center">
+        {{ $jobs->links() }}
+    </div>
 </div>
 <!-- End Page Content -->
 @endsection

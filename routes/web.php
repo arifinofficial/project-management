@@ -33,6 +33,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/role', 'RoleController@index')->name('role.index');
         Route::put('/role/{role}', 'RoleController@update')->name('role.update');
     });
+    // Profile
+    Route::get('/profile', 'ProfileController@index')->name('profile.index');
+    Route::patch('/profile', 'ProfileController@update')->name('profile.update');
 
     Route::group(['prefix' => 'api/datatable', 'as' => 'datatable.'], function () {
         Route::get('/categories', 'CategoryController@dataTable')->name('category');

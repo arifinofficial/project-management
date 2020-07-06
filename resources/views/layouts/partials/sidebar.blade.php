@@ -11,7 +11,7 @@
             <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">
+                        <a class="nav-link" href="{{ route('dashboard') }}">
                             <i class="ni ni-tv-2 text-primary"></i>
                             <span class="nav-link-text">Dashboard</span>
                         </a>
@@ -21,7 +21,7 @@
                 <hr class="my-2">
                 <!-- Nav items -->
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#collapseTask" role="button"
                             aria-expanded="false" aria-controls="collapseTask">
                             <i class="ni ni-archive-2 text-orange"></i>
@@ -39,6 +39,24 @@
                                 </a>
                             </li>
                         </ul>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('job.index') }}">
+                            <i class="ni ni-single-copy-04 text-blue"></i>
+                            <span class="nav-link-text">Pekerjaan</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('job.index') }}">
+                            <i class="ni ni-archive-2 text-green"></i>
+                            <span class="nav-link-text">Arsip</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('job.index') }}">
+                            <i class="ni ni-folder-17 text-orange"></i>
+                            <span class="nav-link-text">Kategori</span>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('user-management.index') }}">

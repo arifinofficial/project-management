@@ -117,8 +117,10 @@
                                 </th>
                                 <td>
                                     <span class="badge badge-dot mr-4">
-                                        <i class="bg-warning"></i>
-                                        <span class="status">pending</span>
+                                        <i v-if="departement.progress == 100" class="bg-success"></i>
+                                        <i v-else class="bg-warning"></i>
+                                        <span v-if="departement.progress == 100" class="status">Selesai</span>
+                                        <span v-else class="status">Progress</span>
                                     </span>
                                 </td>
                                 <td>
@@ -465,7 +467,7 @@ new Vue({
                     axios.patch(`/api/v1/job/${this.id}`, this.inputs)
                     .then((response) => {
                         if (response.status == 200) {
-                            // window.location.reload();
+                            window.location.reload();
                         }
                     });
                 }
