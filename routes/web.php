@@ -36,6 +36,18 @@ Route::group(['middleware' => 'auth'], function () {
     // Profile
     Route::get('/profile', 'ProfileController@index')->name('profile.index');
     Route::patch('/profile', 'ProfileController@update')->name('profile.update');
+    // Archive
+    Route::get('/archive', 'ArchiveController@index')->name('archive.index');
+    Route::post('/archive/{job}', 'ArchiveController@restore')->name('archive.restore');
+    // Search
+    Route::get('/search', 'JobController@search')->name('job.search');
+    //Report
+    Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
+        Route::get('/job-report', 'ReportController@indexJobReport')->name('job.index');
+        Route::post('/job-report', 'ReportController@jobReport')->name('job.pdf');
+        Route::get('/person-report', 'ReportController@indexPersonReport')->name('person.index');
+        Route::post('/person-report', 'ReportController@personReport')->name('person.pdf');
+    });
 
     Route::group(['prefix' => 'api/datatable', 'as' => 'datatable.'], function () {
         Route::get('/categories', 'CategoryController@dataTable')->name('category');
