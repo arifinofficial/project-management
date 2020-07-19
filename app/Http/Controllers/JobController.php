@@ -21,6 +21,16 @@ class JobController extends Controller
     }
 
     /**
+     * Search Job
+     */
+    public function search(Request $request)
+    {
+        $jobs = Job::search($request->q)->paginate(9);
+
+        return view('job.index', compact('jobs'));
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -256,7 +266,17 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        $job->delete();
+        if (request()->has('archive') && request()->archive == true) {
+            $job->delete();
+
+            $route = route('job.index');
+
+            session()->flash('success', 'Data sukses dipindahkan ke arsip.');
+
+            return response()->json(['status' => 'success', 'url' => $route], 200);
+        }
+
+        $job->forceDelete();
 
         $route = route('job.index');
 
