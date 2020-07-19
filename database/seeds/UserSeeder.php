@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             $role = Role::create(['name'=> $value]);
         }
 
-        $permissions = ['create job', 'update job', 'delete job', 'create new departement'];
+        $permissions = ['create job', 'update job', 'delete job', 'create new departement', 'archive job'];
 
         foreach ($permissions as $value) {
             $permission = Permission::create(['name' => $value]);
