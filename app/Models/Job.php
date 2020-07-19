@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Job extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -17,6 +18,24 @@ class Job extends Model
         'end',
         'progress',
     ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
+    }
+
+    /**
+     * Search
+     *
+     * @return void
+     */
+    public function searchableAs()
+    {
+        return 'jobs_index';
+    }
 
     /**
      * Has many relation to departements table
