@@ -29,7 +29,7 @@
 <!-- Page Content -->
 <div class="container-fluid mt--6">
     <div class="row justify-content-center">
-        @foreach ($jobs as $key => $job)
+        @forelse ($jobs as $key => $job)
             <div class="col-4">
                 <div class="card">
                     <div class="card-header bg-transparent">
@@ -67,7 +67,15 @@
                     </div>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <div class="col">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h1>Data Tidak Ditemukan.</h1>
+                    </div>
+                </div>
+            </div>
+        @endforelse
     </div>
     <div class="row justify-content-center">
         {{ $jobs->links() }}

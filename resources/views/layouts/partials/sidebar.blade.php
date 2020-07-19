@@ -47,13 +47,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('job.index') }}">
+                        <a class="nav-link" href="{{ route('archive.index') }}">
                             <i class="ni ni-archive-2 text-green"></i>
                             <span class="nav-link-text">Arsip</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('job.index') }}">
+                        <a class="nav-link" href="{{ route('category.index') }}">
                             <i class="ni ni-folder-17 text-orange"></i>
                             <span class="nav-link-text">Kategori</span>
                         </a>
@@ -63,6 +63,25 @@
                             <i class="ni ni-single-02 text-yellow"></i>
                             <span class="nav-link-text">Manajemen User</span>
                         </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#collapseReport" role="button"
+                        aria-expanded="false" aria-controls="collapseReport">
+                            <i class="ni ni-collection text-grey"></i>
+                            <span class="nav-link-text">Laporan</span>
+                        </a>
+                        <ul class="collapse" id="collapseReport">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('report.job.index') }}">
+                                    Laporan Pekerjaan
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('report.person.index') }}">
+                                    Laporan Karyawan
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     @role('super admin')
                     <li class="nav-item">

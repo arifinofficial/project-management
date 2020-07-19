@@ -11,16 +11,21 @@
     <div class="container-fluid">
         <div class="header-body">
             <div class="row align-items-center py-4">
-                <div class="col">
-                    <h6 class="h2 text-white d-inline-block mb-0">Pekerjaan</h6>
+                <div class="col col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Pekerjaan Baru</h6>
                     <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
                             <li class="breadcrumb-item"><a href="#">Data Pekerjaan</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Pekerjaan Baru</li>
+                            <li class="breadcrumb-item active" aria-current="page">Ubah Pekerjaan</li>
                         </ol>
                     </nav>
                 </div>
+                @can('archive job')
+                <div class="col-lg-6 col-5 text-right">
+                    <a href="#" @click.prevent="archiveJob()" class="btn btn-warning">Arsipkan Pekerjaan</a>
+                </div>
+                @endcan
             </div>
         </div>
     </div>
@@ -491,6 +496,16 @@ new Vue({
                 return 'bg-success';
             }
         },
+        archiveJob(){
+            axios.delete(`/api/v1/job/${this.id}`, {params: {
+                archive: true
+            }})
+            .then((response) => {
+                if (response.status == 200) {
+                    window.location = response.data.url
+                } 
+            });
+        }
     },
 });
 </script>
