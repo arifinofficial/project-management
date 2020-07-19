@@ -38,4 +38,20 @@ class Departement extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    /**
+     * Reverse
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Reverse
+     */
+    public function job()
+    {
+        return $this->belongsTo(Job::class);
+    }
 }
